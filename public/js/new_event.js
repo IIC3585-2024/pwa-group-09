@@ -1,5 +1,3 @@
-const { default: firebase } = require("firebase/compat/app");
-
 document.addEventListener('DOMContentLoaded', () => {
     // Selecciona el botón "Add participant" por su ID
     const addButton = document.getElementById('add-button');
@@ -75,18 +73,25 @@ function createEvent(eventForm) {
     console.log(eventForm);
     // window.location.href = '/'
     saveEventLocally(eventForm);
-    updateFirebaseWithEvent(eventForm)
-        .then(() => {
-            window.location.href = '/';
-            console.log('Evento sincronizado con Firebase');
-        })
-        .catch(error => {
-            console.error('Error al sincronizar el evento con Firebase: ', error);
-        });
+    // updateFirebaseWithEvent(eventForm)
+    //     .then(() => {
+    //         window.location.href = '/';
+    //         console.log('Evento sincronizado con Firebase');
+    //     })
+    //     .catch(error => {
+    //         console.error('Error al sincronizar el evento con Firebase: ', error);
+    //     });
 }
 
 function saveEventLocally(eventForm) {
     const request = indexedDB.open('eventsDB', 1);
+
+    request.onupgradeneeded = function(event) {
+        const db = event.target.result;
+        if (!db.objectStoreNames.contains('events')) {
+            db.createObjectStore('events', { autoIncrement: true });
+        }
+    };
 
     request.onsuccess = function (event) {
         const db = event.target.result;
