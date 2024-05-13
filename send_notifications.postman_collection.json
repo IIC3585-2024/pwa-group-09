@@ -18,14 +18,8 @@
 					},
 					{
 						"key": "Authorization",
-						"value": "key=AAAA9J6i5sY:APA91bHC3GOvaaGLWYc01--MHR-2k4Gc6IhTeIwrvz1z95fqEdvNRLY-z4HOrpH9OPSMr9CN1W25QnScraHFrvhCPLPaRDjvsaizwWF5i_5hGE92qg-K2sz-O3GjhYtvilZM-LQOVXip",
+						"value": "key=<enter your server key here>",
 						"type": "default"
-					},
-					{
-						"key": "Crypto-Key",
-						"value": "p256ecdsa=BIFB0r53I7areXNEPiVjHexoGN3Ybgp5Wte-E8Q2XK2_Wp-vleoQiXTJBRSIvAUWoqeRjmK5OMuQH0rzwkRHiaY",
-						"type": "text",
-						"disabled": true
 					}
 				],
 				"body": {
