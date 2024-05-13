@@ -24,7 +24,7 @@ function loadEventInfomation() {
             const infoEvent = events.find(event => event.id === eventButton.id);
             eventButton.textContent = infoEvent.event_name;
             const nameContainer = document.getElementById('name-list');
-            nameContainer.innerHTML = `<li>
+            nameContainer.innerHTML = `<li class="py-4">
                 <div class="flex items-center">
                     <div class="flex-1 min-w-0 ms-4">
                         <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
@@ -39,6 +39,7 @@ function loadEventInfomation() {
 
             infoEvent.friends.forEach(friend => {
                 const newLi = document.createElement('li');
+                newLi.classList.add('py-4');
                 newLi.innerHTML = `
                     <div class="flex items-center">
                         <div class="flex-1 min-w-0 ms-4">
