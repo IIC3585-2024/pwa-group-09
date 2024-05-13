@@ -59,9 +59,15 @@ To send notifications, you need to run the following steps:
 7. Send the notification.
 8. You will receive a notification in the browser.
 
+Allow notifications
+   ![plot](./public/images/allow_notifications.png)
+
+Install PWA
+![plot](./public/images/install.png)
 Example of notification:
 
 ![plot](./public/images/notification.png)
+
 
 Example of using offline mode:
 
