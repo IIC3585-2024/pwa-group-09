@@ -5,7 +5,7 @@ const precacheResources = [
     '/index.html',
     '/pages/edit_event.html',
     '/pages/edit_transaction.html',
-    '/pages/event_page.html',
+    '/pages/event_page.ejs',
     '/pages/new_event.html',
     '/css/output.css',
     '/js/main.js',
@@ -14,6 +14,7 @@ const precacheResources = [
     '/images/favicon.ico',
     '/node_modules/flowbite/dist/flowbite.min.css ',
     '/node_modules/flowbite/dist/flowbite.min.js',
+    '/node_modules/uuid/dist/index.js',
 ]
 self.addEventListener('install', (event) => {
     // console.log('Service worker install event!');

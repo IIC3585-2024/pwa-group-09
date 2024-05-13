@@ -194,8 +194,55 @@ document.addEventListener('DOMContentLoaded', () => {
     const script = document.createElement('script');
     script.src = '/node_modules/flowbite/dist/flowbite.min.js';
     document.body.appendChild(script);
+    loadEvents();
 });
 
+function loadEvents() {
+    const request = indexedDB.open('eventsDB', 1);
+
+    request.onupgradeneeded = function(event) {
+        const db = event.target.result;
+        if (!db.objectStoreNames.contains('events')) {
+            db.createObjectStore('events', { autoIncrement: true });
+        }
+    };
+
+    request.onsuccess = function(event) {
+        const db = event.target.result;
+        const transaction = db.transaction(['events'], 'readonly');
+        const objectStore = transaction.objectStore('events');
+        const request = objectStore.getAll();
+
+        request.onsuccess = function(event) {
+            const events = event.target.result;
+            const eventsContainer = document.getElementById('events-container');
+            eventsContainer.innerHTML = '';
+
+            events.forEach(event => {
+                const eventElement = document.createElement('div');
+                eventElement.classList.add('event');
+                eventElement.innerHTML = `
+                        <div class="w-48 text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                            <a href="/event/${event.id}"
+                            class="inline-flex items-center w-full px-4 py-2 text-sm font-medium border-b border-gray-200 rounded-t-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
+                                <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                    fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M10 9.293l5.293-5.293a1 1 0 011.414 1.414L11.414 10l5.293 5.293a1 1 0 01-1.414 1.414L10 11.414l-5.293 5.293a1 1 0 01-1.414-1.414L8.586 10 3.293 4.707a1 1 0 011.414-1.414L10 8.586z"
+                                        clip-rule="evenodd"/>
+                                </svg>
+                                ${event.event_name}
+                            </a>
+                        </div> `
+                eventsContainer.appendChild(eventElement);
+            });
+        };
+    }
+
+    request.onerror = function(event) {
+        console.log('Error loading events');
+    }
+}
 
 if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
     document.documentElement.classList.add('dark');

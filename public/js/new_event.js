@@ -1,5 +1,3 @@
-const { default: firebase } = require("firebase/compat/app");
-
 document.addEventListener('DOMContentLoaded', () => {
     // Selecciona el botón "Add participant" por su ID
     const addButton = document.getElementById('add-button');
@@ -53,18 +51,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         const eventForm = {
-            id: formData.get('id_event') ? formData.get('id_event') : null,
+            id: uuid.v4(),
             event_name: formData.get('event_name'),
             currency: formData.get('currency'),
             participant_name: formData.get('participant_name'),
             friends: friends,
         };
 
-        if (eventForm.id) {
-            editEvent(eventForm);
-        }else{
-            createEvent(eventForm);
-        }
+        createEvent(eventForm);
 
     });
 });
@@ -73,20 +67,27 @@ let db;
 
 function createEvent(eventForm) {
     console.log(eventForm);
-    // window.location.href = '/'
+    console.log("hola")
     saveEventLocally(eventForm);
-    updateFirebaseWithEvent(eventForm)
-        .then(() => {
-            window.location.href = '/';
-            console.log('Evento sincronizado con Firebase');
-        })
-        .catch(error => {
-            console.error('Error al sincronizar el evento con Firebase: ', error);
-        });
+    // updateFirebaseWithEvent(eventForm)
+    //     .then(() => {
+    //         window.location.href = '/';
+    //         console.log('Evento sincronizado con Firebase');
+    //     })
+    //     .catch(error => {
+    //         console.error('Error al sincronizar el evento con Firebase: ', error);
+    //     });
 }
 
 function saveEventLocally(eventForm) {
     const request = indexedDB.open('eventsDB', 1);
+
+    request.onupgradeneeded = function(event) {
+        const db = event.target.result;
+        if (!db.objectStoreNames.contains('events')) {
+            db.createObjectStore('events', { autoIncrement: true });
+        }
+    };
 
     request.onsuccess = function (event) {
         const db = event.target.result;
@@ -97,6 +98,7 @@ function saveEventLocally(eventForm) {
 
         requestAdd.onsuccess = function (event) {
             console.log('Evento almacenado en IndexedDB');
+            window.location.href = '/';
         };
 
         requestAdd.onerror = function (event) {
