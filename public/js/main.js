@@ -197,6 +197,36 @@ document.addEventListener('DOMContentLoaded', () => {
     loadEvents();
 });
 
+function deleteEvent(id) {
+    const request = indexedDB.open('eventsDB', 1);
+
+    request.onsuccess = function(event) {
+        const db = event.target.result;
+        const transaction = db.transaction(['events'], 'readwrite');
+        const objectStore = transaction.objectStore('events');
+
+        // Abre un cursor y itera sobre los objetos en el almacén
+        objectStore.openCursor().onsuccess = function(event) {
+            const cursor = event.target.result;
+            if (cursor) {
+                // Si el objeto actual coincide con el criterio, elimínalo
+                if (cursor.value.id === id) {
+                    objectStore.delete(cursor.primaryKey);
+                }
+                // Continúa al siguiente objeto
+                cursor.continue();
+            } else {
+                // No hay más objetos, recarga los eventos
+                loadEvents();
+            }
+        };
+    };
+
+    request.onerror = function(event) {
+        console.log('Error deleting event');
+    }
+}
+
 function loadEvents() {
     const request = indexedDB.open('eventsDB', 1);
 
@@ -222,20 +252,29 @@ function loadEvents() {
                 const eventElement = document.createElement('div');
                 eventElement.classList.add('event');
                 eventElement.innerHTML = `
-                        <div class="w-48 text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <div class="flex w-48 text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                            <button id="delete-button-${event.id}">
+                                <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 9.293l5.293-5.293a1 1 0 011.414 1.414L11.414 10l5.293 5.293a1 1 0 01-1.414 1.414L10 11.414l-5.293 5.293a1 1 0 01-1.414-1.414L8.586 10 3.293 4.707a1 1 0 011.414-1.414L10 8.586z"
+                                    clip-rule="evenodd"/>
+                                </svg>
+                            </button>
                             <a href="/event/${event.id}"
                             class="inline-flex items-center w-full px-4 py-2 text-sm font-medium border-b border-gray-200 rounded-t-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
-                                <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                    fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                        d="M10 9.293l5.293-5.293a1 1 0 011.414 1.414L11.414 10l5.293 5.293a1 1 0 01-1.414 1.414L10 11.414l-5.293 5.293a1 1 0 01-1.414-1.414L8.586 10 3.293 4.707a1 1 0 011.414-1.414L10 8.586z"
-                                        clip-rule="evenodd"/>
-                                </svg>
                                 ${event.event_name}
                             </a>
                         </div> `
                 eventsContainer.appendChild(eventElement);
+
+                const deleteButton = document.getElementById(`delete-button-${event.id}`);
+                deleteButton.addEventListener('click', function() {
+                    console.log('Delete button clicked');
+                    deleteEvent(event.id);
+                });
             });
+
         };
     }
 
@@ -249,6 +288,7 @@ if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localS
 } else {
     document.documentElement.classList.remove('dark')
 }
+
 
 var themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
 var themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
