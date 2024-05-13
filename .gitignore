@@ -33,5 +33,6 @@ bower_components
 .env.local
 /public/config.js
 /public/config_fcm_sw.js
+/public/.DS_Store
 #//    "start": "nodemon server.js & browser-sync start --config bs-config.js"
 # node-waf configuration
