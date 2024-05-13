@@ -6,7 +6,6 @@ const app = express();
 console.log(process.env.API_KEY)
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')));
-app.set('view engine', 'ejs');
 
 var subscribers = []
 
@@ -39,9 +38,8 @@ app.get('/new_event', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'pages/new_event.html'));
 });
 
-app.get('/event/:id', (req, res) => {
-    const id = req.params.id;
-    res.render(path.join(__dirname, 'public', 'pages/event_page.ejs'), { id: id });
+app.get('/event', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'pages/event_page.html'));
 });
 
 app.get('/edit-transaction', (req, res) => {

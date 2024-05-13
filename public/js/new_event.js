@@ -1,3 +1,4 @@
+import firebaseApp from './main.js';
 document.addEventListener('DOMContentLoaded', () => {
     // Selecciona el botón "Add participant" por su ID
     const addButton = document.getElementById('add-button');
@@ -51,14 +52,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         const eventForm = {
-            id: uuid.v4(),
+            id: formData.get('id_event') ? formData.get('id_event') : null,
             event_name: formData.get('event_name'),
             currency: formData.get('currency'),
             participant_name: formData.get('participant_name'),
             friends: friends,
         };
 
-        createEvent(eventForm);
+        if (eventForm.id) {
+            editEvent(eventForm);
+        }else{
+            createEvent(eventForm);
+        }
 
     });
 });
@@ -67,27 +72,20 @@ let db;
 
 function createEvent(eventForm) {
     console.log(eventForm);
-    console.log("hola")
-    saveEventLocally(eventForm);
-    // updateFirebaseWithEvent(eventForm)
-    //     .then(() => {
-    //         window.location.href = '/';
-    //         console.log('Evento sincronizado con Firebase');
-    //     })
-    //     .catch(error => {
-    //         console.error('Error al sincronizar el evento con Firebase: ', error);
-    //     });
+    // window.location.href = '/'
+    // saveEventLocally(eventForm);
+    updateFirebaseWithEvent(eventForm)
+        .then(() => {
+            window.location.href = '/';
+            console.log('Evento sincronizado con Firebase');
+        })
+        .catch(error => {
+            console.error('Error al sincronizar el evento con Firebase: ', error);
+        });
 }
 
 function saveEventLocally(eventForm) {
     const request = indexedDB.open('eventsDB', 1);
-
-    request.onupgradeneeded = function(event) {
-        const db = event.target.result;
-        if (!db.objectStoreNames.contains('events')) {
-            db.createObjectStore('events', { autoIncrement: true });
-        }
-    };
 
     request.onsuccess = function (event) {
         const db = event.target.result;
@@ -98,7 +96,6 @@ function saveEventLocally(eventForm) {
 
         requestAdd.onsuccess = function (event) {
             console.log('Evento almacenado en IndexedDB');
-            window.location.href = '/';
         };
 
         requestAdd.onerror = function (event) {
@@ -114,7 +111,7 @@ function saveEventLocally(eventForm) {
 function updateFirebaseWithEvent(eventForm){
     return new Promise((resolve, reject) => {
         //const db = firebase.firestore();
-        const database = firebase.database();
+        const database = firebaseApp.database();
         const newEventRef = database.ref('events').push();
 
         newEventRef.set(eventForm)

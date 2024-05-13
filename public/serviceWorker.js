@@ -1,20 +1,24 @@
-const cacheName = `static-v4`
+const cacheName = `static-v5`
 
 const precacheResources = [
     '/',
     '/index.html',
     '/pages/edit_event.html',
     '/pages/edit_transaction.html',
-    '/pages/event_page.ejs',
+    '/pages/event_page.html',
     '/pages/new_event.html',
     '/css/output.css',
     '/js/main.js',
+    '/js/edit_transaction.js',
+    '/js/event.js',
+    '/js/new_event.js',
     '/images/pie.jpg',
     '/images/mobile.png',
     '/images/favicon.ico',
+    '/images/on.png',
+    '/images/off.png',
     '/node_modules/flowbite/dist/flowbite.min.css ',
     '/node_modules/flowbite/dist/flowbite.min.js',
-    '/node_modules/uuid/dist/index.js',
 ]
 self.addEventListener('install', (event) => {
     // console.log('Service worker install event!');
