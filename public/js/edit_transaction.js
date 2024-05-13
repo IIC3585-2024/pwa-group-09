@@ -2,6 +2,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const form = document.getElementById('edit-form');
     const addDetailsButton = document.getElementById('add-details-button');
 
+    addDetailsButton.addEventListener('click', function(event) {
+        window.location.href = '/add-details';
+    });
+
     form.addEventListener('submit', function (event) {
         event.preventDefault();
         const formData = new FormData(form);
@@ -32,7 +36,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
         saveTransactionForm(transactionForm);
 
 
-        window.location.href = '/event';
+        //window.location.href = '/event';
+        window.location.href = '/add-details';
     });
 })
 
@@ -79,4 +84,6 @@ function saveTransactionForm(transactionForm) {
             console.error('Error al guardar el formulario en IndexedDB:', event.target.error);
         };
     };
+
+    
 }

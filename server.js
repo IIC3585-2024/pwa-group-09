@@ -52,4 +52,8 @@ app.get('/edit-event', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'pages/edit_event.html'));
 });
 
+app.get('/add-details', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'pages/add_details.html'));
+});
+
 app.listen(8080, () => console.log('Server listening on port 8080'));
