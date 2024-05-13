@@ -5,6 +5,7 @@ const precacheResources = [
     '/index.html',
     '/pages/edit_event.html',
     '/pages/edit_transaction.html',
+    '/pages/add_details.html',
     '/pages/event_page.ejs',
     '/pages/new_event.html',
     '/css/output.css',
