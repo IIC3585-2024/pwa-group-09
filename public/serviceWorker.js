@@ -1,4 +1,4 @@
-const cacheName = `static-v4`
+const cacheName = `static-v5`
 
 const precacheResources = [
     '/',
@@ -9,9 +9,14 @@ const precacheResources = [
     '/pages/new_event.html',
     '/css/output.css',
     '/js/main.js',
+    '/js/edit_transaction.js',
+    '/js/event.js',
+    '/js/new_event.js',
     '/images/pie.jpg',
     '/images/mobile.png',
     '/images/favicon.ico',
+    '/images/on.png',
+    '/images/off.png',
     '/node_modules/flowbite/dist/flowbite.min.css ',
     '/node_modules/flowbite/dist/flowbite.min.js',
 ]

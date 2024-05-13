@@ -1,3 +1,4 @@
+import firebaseApp from './main.js';
 document.addEventListener('DOMContentLoaded', () => {
 
     const divs = document.getElementsByClassName('expense-user');
@@ -6,4 +7,5 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = '/edit-transaction';
         });
     }
+
 });

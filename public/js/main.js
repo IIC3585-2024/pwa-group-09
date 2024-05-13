@@ -1,8 +1,8 @@
 import config from '../config.js';
 
-firebase.initializeApp(config);
+const firebaseApp = firebase.initializeApp(config);
 const messaging = firebase.messaging();
-
+export default firebaseApp;
 messaging
     .requestPermission()
     .then(() => {
@@ -10,18 +10,13 @@ messaging
         return messaging.getToken();
     })
     .then(token => {
-        console.log("Token Is : " + token)
+        console.log("Token of notification Is : " + token)
     })
     .catch(err => {
         console.log("No permission to send push", err);
     });
 
-// messaging.onMessage(payload => {
-//     console.log("Message received. ", payload);
-//     const { title, ...options } = payload.notification;
-// });
-
-messaging.onMessage(function(payload) {
+messaging.onMessage(function (payload) {
     const notificationTitle = payload.notification.title;
     const notificationOptions = {
         body: payload.notification.body,
@@ -33,10 +28,10 @@ messaging.onMessage(function(payload) {
         console.log("This browser does not support system notifications.");
     } else if (Notification.permission === "granted") {
         // If it's okay let's create a notification
-        var notification = new Notification(notificationTitle,notificationOptions);
-        notification.onclick = function(event) {
+        var notification = new Notification(notificationTitle, notificationOptions);
+        notification.onclick = function (event) {
             event.preventDefault();
-            window.open(payload.notification.click_action , '_blank');
+            window.open(payload.notification.click_action, '_blank');
             notification.close();
         }
     }
@@ -71,8 +66,7 @@ function checkIfPushIsEnabled() {
                     if (subscription) {
                         //---user is currently subscribed to push---
                         console.log('User is currently subscribed to push.');
-                    }
-                    else {
+                    } else {
                         //---user is not subscribed to push---
                         console.log('User is not subscribed to push');
                     }
@@ -101,7 +95,7 @@ function urlBase64ToUint8Array(base64String) {
 //---subscribe to push notification---
 function subscribeToPushNotification() {
     navigator.serviceWorker.ready
-        .then(function(registration) {
+        .then(function (registration) {
             if (!registration.pushManager) {
                 alert('This browser does not ' + 'support push notification.');
                 return false;
@@ -127,10 +121,10 @@ function subscribeToPushNotification() {
 //---unsubscribe from push notification---
 function unsubscribeFromPushNotification() {
     navigator.serviceWorker.ready
-        .then(function(registration) {
+        .then(function (registration) {
             registration.pushManager.getSubscription()
                 .then(function (subscription) {
-                    if(!subscription) {
+                    if (!subscription) {
                         alert('Unable to unsubscribe from push ' + 'notification.');
                         return;
                     }
@@ -144,7 +138,7 @@ function unsubscribeFromPushNotification() {
                         });
                 })
                 .catch(function (error) {
-                    console.error('Failed to unsubscribe push ' +'notification.');
+                    console.error('Failed to unsubscribe push ' + 'notification.');
                 });
         })
 }
@@ -161,8 +155,7 @@ if (window.location.pathname === '/' || window.location.pathname === '/index.htm
         //---check if you are already subscribed to push notifications---
         if (pushElement.dataset.checked === 'true') {
             unsubscribeFromPushNotification();
-        }
-        else {
+        } else {
             subscribeToPushNotification();
         }
     });
@@ -188,6 +181,60 @@ if (window.location.pathname === '/' || window.location.pathname === '/index.htm
             });
         });
     }
+    async function fetchAndDisplayEvents() {
+        // Obtén una referencia a la base de datos de Firebase
+        const dbRef = firebaseApp.database().ref('events');
+
+        // Obtén los datos de los eventos
+        const snapshot = await dbRef.once('value');
+        const events = snapshot.val();
+
+        // Obtén una referencia al div donde se mostrarán los eventos
+        const eventsDiv = document.getElementById('events');
+
+        // Limpia el div de eventos
+        eventsDiv.innerHTML = '';
+
+        // Itera sobre los eventos y crea un elemento HTML para cada uno
+        for (let eventId in events) {
+            const event = events[eventId];
+
+            // Crea un nuevo div para el evento
+            const eventDiv = document.createElement('div');
+            eventDiv.className = 'w-48 text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white';
+
+            // Crea un enlace para el evento
+            const eventLink = document.createElement('a');
+            eventLink.href = `/event/${eventId}`;
+            eventLink.className = 'inline-flex items-center w-full px-4 py-2 text-sm font-medium border-b border-gray-200 rounded-t-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white';
+
+            // Crea un SVG para el enlace del evento
+            const eventSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            eventSvg.setAttribute('class', 'w-3 h-3 me-2.5');
+            eventSvg.setAttribute('fill', 'currentColor');
+            eventSvg.setAttribute('viewBox', '0 0 20 20');
+
+            const eventPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            eventPath.setAttribute('fill-rule', 'evenodd');
+            eventPath.setAttribute('d', 'M10 9.293l5.293-5.293a1 1 0 011.414 1.414L11.414 10l5.293 5.293a1 1 0 01-1.414 1.414L10 11.414l-5.293 5.293a1 1 0 01-1.414-1.414L8.586 10 3.293 4.707a1 1 0 011.414-1.414L10 8.586z');
+            eventPath.setAttribute('clip-rule', 'evenodd');
+
+            eventSvg.appendChild(eventPath);
+            eventLink.appendChild(eventSvg);
+
+            // Agrega el nombre del evento al enlace
+            eventLink.appendChild(document.createTextNode(event.event_name));
+
+            // Agrega el enlace al div del evento
+            eventDiv.appendChild(eventLink);
+
+            // Agrega el div del evento al div de eventos
+            eventsDiv.appendChild(eventDiv);
+        }
+    }
+
+// Llama a la función cuando se carga la página
+    document.addEventListener('DOMContentLoaded', fetchAndDisplayEvents);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -242,4 +289,5 @@ themeToggleBtn.addEventListener('click', function () {
         }
     }
 });
+
 

@@ -1,5 +1,4 @@
-const { default: firebase } = require("firebase/compat/app");
-
+import firebaseApp from './main.js';
 document.addEventListener('DOMContentLoaded', () => {
     // Selecciona el botón "Add participant" por su ID
     const addButton = document.getElementById('add-button');
@@ -74,7 +73,7 @@ let db;
 function createEvent(eventForm) {
     console.log(eventForm);
     // window.location.href = '/'
-    saveEventLocally(eventForm);
+    // saveEventLocally(eventForm);
     updateFirebaseWithEvent(eventForm)
         .then(() => {
             window.location.href = '/';
@@ -112,7 +111,7 @@ function saveEventLocally(eventForm) {
 function updateFirebaseWithEvent(eventForm){
     return new Promise((resolve, reject) => {
         //const db = firebase.firestore();
-        const database = firebase.database();
+        const database = firebaseApp.database();
         const newEventRef = database.ref('events').push();
 
         newEventRef.set(eventForm)
