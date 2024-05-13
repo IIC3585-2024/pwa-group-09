@@ -1,8 +1,6 @@
 {
   "scripts": {
     "start": "node server.js ",
-    "start_local": "node -r dotenv/config server.js",
-    "dev": "nodemon server.js & browser-sync start --config bs-config.js && tailwindcss -i ./src/styles.css -o ./public/styles.css --watch"
   },
   "devDependencies": {
     "browser-sync": "^3.0.2",

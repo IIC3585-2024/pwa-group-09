@@ -1,0 +1,40 @@
+{
+	"info": {
+		"_postman_id": "a229cb23-028f-4a42-9d07-37754ffdee27",
+		"name": "send_notifications",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "20194388"
+	},
+	"item": [
+		{
+			"name": "send_notification",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "default"
+					},
+					{
+						"key": "Authorization",
+						"value": "key=AAAA9J6i5sY:APA91bHC3GOvaaGLWYc01--MHR-2k4Gc6IhTeIwrvz1z95fqEdvNRLY-z4HOrpH9OPSMr9CN1W25QnScraHFrvhCPLPaRDjvsaizwWF5i_5hGE92qg-K2sz-O3GjhYtvilZM-LQOVXip",
+						"type": "default"
+					},
+					{
+						"key": "Crypto-Key",
+						"value": "p256ecdsa=BIFB0r53I7areXNEPiVjHexoGN3Ybgp5Wte-E8Q2XK2_Wp-vleoQiXTJBRSIvAUWoqeRjmK5OMuQH0rzwkRHiaY",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"notification\":{\n        \"title\":\"Viaje a Antofagasta\",\n        \"body\":\"Viaje a Antofagasta\",\n        \"click_action\":\"http://127.0.0.1:8080\",\n        \"icon\":\"https://w7.pngwing.com/pngs/941/692/png-transparent-black-small-apple-logo-logo-material-apple-logo-black.png\"\n    },\n    \"to\":\"cQ4hoyk230epsr1Quq2g8j:APA91bG-7iEvp4uM6O6K6g9UVP9P0rc0A5ujhpyVUydNNeKXzhrLX3d2ncwg9bihXcSxaJl7XXFSMU8qgOPjcyCHz0DdOQpmYgAH2IjeKEaXfp3S5RvfTf667xz5pkbfRO4OF-N4R1ty\"\n}"
+				},
+				"url": "https://fcm.googleapis.com/fcm/send"
+			},
+			"response": []
+		}
+	]
+}
